@@ -20,11 +20,11 @@ int serialIndex = 0;
 // animated ball
 int minPotValue = 0;
 int maxPotValue = 4095; 
-int minBallSpeed = 0;
-int maxBallSpeed = 50;
+
 int xPos, yPos;
 float h = 10;
 float w = 10;
+int lastSwitchValue;
 
 void setup() 
 {
@@ -59,29 +59,48 @@ void draw()
   drawBackground();
   drawObjects();
   drawTexts();
+ 
 }
 
 void drawBackground()
 {
- //background changes color based on button input)
-  if(switchValue == 1)
-    background(0);
-  else
-    background(200, 0, 255); 
+  float speed = map(potValue, minPotValue, maxPotValue, 0, 255);
+ //background changes color based on potentiometer input
+  if(speed <= 1365)
+    background(255,0,0);
+  else if(speed > 1365 && speed <=2730)
+    background(0,255,0);
+  else if(speed > 2730 && speed <= 4095)
+    background(0,0,255);
+  
 }
 void drawObjects() 
 {
-  fill(255,0,0);
-  ellipse(xPos, yPos, 10,10);
-  fill(0,0,255);
+  fill(255,255,0);
+  ellipse(xPos, yPos, w,h);
+  fill(0,255,255);
   ellipse(xPos/2, yPos/2, h, w);
-  float speed = map(potValue, minPotValue, maxPotValue, minBallSpeed, maxBallSpeed);
-  println(speed);
-  if(switchValue == 1)
+  
+  //animating balls and changing size
+  if(switchValue != lastSwitchValue)
   {
-    xPos+=1;
-    yPos+=5;
+    if(switchValue == 1)
+    {
+      h+=1;
+      w+=1;
+      if(yPos < 600)
+      {
+        xPos+=5;
+        yPos+=5;
+      }
+      else
+      {
+        xPos-=5;
+        yPos-=1;
+      }
+    }
   }
+  lastSwitchValue = switchValue;
 }
 
 void drawTexts() 
